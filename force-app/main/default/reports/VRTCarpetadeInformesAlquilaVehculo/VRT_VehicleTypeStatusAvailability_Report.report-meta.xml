@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>VRT_Vehicle__c$Name</field>
+    </columns>
+    <description>Informe con tabla resumen, que indica los vehículos clasificados por categoría y disponibilidad según su estado</description>
+    <format>Matrix</format>
+    <groupingsAcross>
+        <dateGranularity>Day</dateGranularity>
+        <field>VRT_Vehicle__c$VRT_SEL_Status__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsAcross>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>VRT_Vehicle__c$VRT_SEL_VehicleType__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>VRT_Vehicle__c$VRT_FLG_Available__c</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>VRT Vehículo TipoEstadoDisponible Report</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>VRT_Vehicle_ReportType__c</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>VRT_Vehicle__c$VRT_DAT_ManufacturedYear__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

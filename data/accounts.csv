@@ -1,0 +1,6 @@
+Name,AnnualRevenue,VRT_TXT_Email__c,NumberOfEmployees,Industry,Ownership,Phone,Rating,Type,VRT_TXT_ExternalId__c
+Tech Solutions Inc,1000000,info@techsolutions.com,50,Technology,Public,555-555-5555,Hot,Prospect,ACC0005
+Global Logistics LLC,500000,info@globallogistics.com,75,Transportation,Private,555-555-5555,Medium,Customer - Direct,ACC0004
+Sunshine Bakery,200000,info@sunshinebakery.com,20,Food & Beverage,Public,555-555-5555,Hot,Customer - Channel,ACC0003
+Green Energy Co,800000,info@greenenergyco.com,100,Energy,Subsidiary,555-555-5555,Warm,Channel Partner / Reseller,ACC0002
+ABC Manufacturing,3000000,info@abcmanufacturing.com,150,Manufacturing,Other,555-555-5555,Cold,Installation Partner,ACC0001

@@ -1,0 +1,11 @@
+VRT_TXT_Brand__c,VRT_SEL_VehicleType__c,VRT_TXT_Model__c,VRT_DAT_ManufacturedYear__c,VRT_TXT_LicensePlate__c,VRT_TXT_Color__c,VRT_NUM_Mileage__c,VRT_SEL_Status__c,VRT_FLG_Available__c,VRT_SEL_EnergyType__c,VRT_NUM_Passengers__c,VRT_SEL_Condition__c,VRT_NUM_Usage__c,VRT_FLG_NeedsInspection__c,VRT_TXT_ExternalId__c
+Toyota,Coche,Camry,2018-01-01,2234ABC,Blanco,35000,Listo,TRUE,Gasolina,5,Recién fabricado,800,FALSE,EXT009
+Honda,Moto,CRF250L,2020-01-01,9567XYZ,Rojo,10000,En mantenimiento,FALSE,Gasolina,1,Casi nuevo,50,FALSE,EXT010
+Tesla,Coche,Model S,2019-01-01,7990DEF,Azul,25000,Listo,TRUE,Eléctrico,5,Casi nuevo,20,FALSE,EXT011
+Yamaha,Moto,MT-07,2017-01-01,2395GHI,Negro,45000,Fuera de servicio,FALSE,Gasolina,2,Bastante desgastado,100,FALSE,EXT012
+Hyundai,Coche,Accent,2016-01-01,5098KLM,Gris,55000,Listo,TRUE,Gasolina,5,Algo desgastado,8,FALSE,EXT013
+Toyota,Coche,Corolla,2017-01-01,1287ABC,Rojo,40000,Listo,TRUE,Gasolina,5,Casi nuevo,200,FALSE,EXT014
+Suzuki,Moto,V-Strom 650,2019-01-01,9856XYZ,Amarillo,15000,En mantenimiento,FALSE,Gasolina,2,Bastante desgastado,300,FALSE,EXT015
+Ford,Coche,Fiesta,2015-01-01,7290DEF,Verde,60000,Fuera de servicio,FALSE,Gasolina,5,Deplorable,500,FALSE,EXT016
+Kawasaki,Moto,Ninja 300,2018-01-01,2385GHI,Azul,25000,Listo,TRUE,Gasolina,2,Recién fabricado,100,FALSE,EXT017
+Chevrolet,Coche,Camaro,2020-01-01,5178KLM,Blanco,10000,Listo,TRUE,Gasolina,4,Casi nuevo,50,FALSE,EXT018

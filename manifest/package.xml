@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <!-- App y navegación -->
+    <types>
+        <members>VRT_VehicleRentalSL</members>
+        <name>CustomApplication</name>
+    </types>
+
+    <types>
+        <members>VRT_Vehicle__c</members>
+        <members>VRT_Rental__c</members>
+        <name>CustomTab</name>
+    </types>
+
+    <!-- Objetos custom completos -->
+    <types>
+        <members>VRT_Vehicle__c</members>
+        <members>VRT_Rental__c</members>
+        <name>CustomObject</name>
+    </types>
+
+    <!-- Customizaciones necesarias sobre Account y Contact -->
+    <types>
+        <members>Account.VRT_TXT_Email__c</members>
+        <members>Account.VRT_TXT_ExternalId__c</members>
+        <members>Contact.VRT_TXT_Position__c</members>
+        <name>CustomField</name>
+    </types>
+
+    <types>
+        <members>Account.VRT_ShippingAccounts_List</members>
+        <members>VRT_Vehicle__c.VRT_AvailableVehicles_List</members>
+        <name>ListView</name>
+    </types>
+
+    <!-- Validation Rules -->
+    <types>
+        <members>VRT_Vehicle__c.VRT_AnoFabricacion_ValidationRule</members>
+        <members>VRT_Vehicle__c.VRT_EvitarKmNegativo_ValidationRule</members>
+        <members>VRT_Vehicle__c.VRT_Matricula_ValidationRule</members>
+        <members>VRT_Vehicle__c.VRT_PasajerosNegativo_ValidationRule</members>
+        <members>VRT_Rental__c.VRT_CosteNegativo_ValidationRule</members>
+        <members>VRT_Rental__c.VRT_Duracion_ValidationRule</members>
+        <members>VRT_Rental__c.VRT_FechaFinal_ValidationRule</members>
+        <members>VRT_Rental__c.VRT_FechaInicio_ValidationRule</members>
+        <members>VRT_Rental__c.VRT_PagoPendienteNoInicia_ValidationRule</members>
+        <members>VRT_Rental__c.VRT_ReservaValida_ValidationRule</members>
+        <members>VRT_Rental__c.VRT_VehiculoDispAlquiler_ValidationRule</members>
+        <name>ValidationRule</name>
+    </types>
+
+    <!-- Layouts -->
+    <types>
+        <members>Account-VehicleRental Account Layout</members>
+        <members>VRT_Vehicle__c-VehicleRental Vehículo Layout</members>
+        <members>VRT_Rental__c-VehicleRental Alquiler Layout</members>
+        <name>Layout</name>
+    </types>
+
+    <!-- Lightning Pages -->
+    <types>
+        <members>Veh_culo_Record_Page</members>
+        <members>Alquiler_Record_Page</members>
+        <members>Alquiler_Veh_culos_Home_Page</members>
+        <members>AlquilaVeh_culo_S_L_UtilityBar</members>
+        <name>FlexiPage</name>
+    </types>
+
+    <!-- Flow y acción -->
+    <types>
+        <members>VRT_FLW_CreateRental</members>
+        <name>Flow</name>
+    </types>
+
+    <types>
+        <members>Account.Crear_un_Alquiler</members>
+        <name>QuickAction</name>
+    </types>
+
+    <!-- Apex -->
+    <types>
+        <members>VRT_TRG_RentalHandler</members>
+        <members>VRT_TRG_RentalHandlerHelper</members>
+        <members>VRT_TRG_Rental_Test</members>
+        <members>VRT_CLS_CheckVehicleRevision</members>
+        <members>VRT_CLS_CheckVehicleRevision_Test</members>
+        <members>VRT_CLS_VehicleRevisionSchedule</members>
+        <members>VRT_CLS_VehicleRevisionSchedule_Test</members>
+        <name>ApexClass</name>
+    </types>
+
+    <types>
+        <members>VRT_TRG_Rental</members>
+        <name>ApexTrigger</name>
+    </types>
+
+    <!-- Report Types -->
+    <types>
+        <members>VRT_Account_ReportType</members>
+        <members>VRT_Vehicle_ReportType</members>
+        <members>VRT_Rentals_ReportType</members>
+        <members>VRT_Vehicle_Rental_ReportType</members>
+        <members>VRT_Account_Rental_ReportType</members>
+        <name>ReportType</name>
+    </types>
+
+    <!-- Reports -->
+    <types>
+        <members>VRTCarpetadeInformesAlquilaVehculo</members>
+        <members>VRTCarpetadeInformesAlquilaVehculo/VRT_RentalsLastMonthStatus_Report</members>
+        <members>VRTCarpetadeInformesAlquilaVehculo/VRT_VehicleTypeStatusAvailability_Report</members>
+        <members>VRTCarpetadeInformesAlquilaVehculo/VRT_ActiveAccountsIndustry_Report</members>
+        <members>VRTCarpetadeInformesAlquilaVehculo/VRT_BrandVehicleDuration_Report</members>
+        <members>VRTCarpetadeInformesAlquilaVehculo/VRT_SLA_AccountRental_Cost_Report</members>
+        <name>Report</name>
+    </types>
+
+    <!-- Dashboards -->
+    <types>
+        <members>VRTDashboardsFolder</members>
+        <members>VRTDashboardsFolder/SwpTSzvivJatvnatULAtHNrAGZYVSQ1</members>
+        <name>Dashboard</name>
+    </types>
+
+    <!-- Profiles -->
+    <types>
+        <members>Admin</members>
+        <name>Profile</name>
+    </types>
+
+    <version>66.0</version>
+</Package>

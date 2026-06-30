@@ -1,0 +1,22 @@
+AccountExternalId,VehicleExternalId,VRT_DAT_InitialDate__c,VRT_DAT_FinalDate__c,VRT_DIV_TotalCost__c,VRT_SEL_Status__c,VRT_SEL_PaymentStatus__c,VRT_TXT_Notes__c
+ACC0001,EXT009,2026-01-16,2026-01-20,1700,Cancelado,Pendiente,Registro de ejemplo Track I #01
+ACC0002,EXT009,2026-01-16,2026-01-26,1900,Cancelado,Pendiente,Registro de ejemplo Track I #02
+ACC0003,EXT011,2026-01-14,2026-01-18,1900,Completado,Pagado,Registro de ejemplo Track I #03
+ACC0004,EXT013,2026-01-16,2026-01-18,1900,Completado,Pagado,Registro de ejemplo Track I #04
+ACC0005,EXT013,2026-01-11,2026-01-18,1900,Completado,Pagado,Registro de ejemplo Track I #05
+ACC0001,EXT009,2026-01-19,2026-01-22,1900,Completado,Pagado,Registro de ejemplo Track I #06
+ACC0002,EXT011,2026-01-15,2026-01-22,1900,En curso,Pagado,Registro de ejemplo Track I #07
+ACC0003,EXT011,2026-01-19,2026-01-22,1900,En curso,Pagado,Registro de ejemplo Track I #08
+ACC0004,EXT013,2026-01-13,2026-01-22,1900,En curso,Pagado,Registro de ejemplo Track I #09
+ACC0005,EXT013,2026-01-10,2026-01-22,1900,En curso,Pagado,Registro de ejemplo Track I #10
+ACC0001,EXT009,2026-01-11,2026-01-22,1900,En curso,Pagado,Registro de ejemplo Track I #11
+ACC0002,EXT009,2026-01-12,2026-01-22,1900,En curso,Pagado,Registro de ejemplo Track I #12
+ACC0003,EXT011,2026-01-15,2026-01-22,1900,En curso,Pagado,Registro de ejemplo Track I #13
+ACC0004,EXT011,2026-01-16,2026-01-18,1900,Cancelado,Pagado,Registro de ejemplo Track I #14
+ACC0005,EXT013,2026-01-16,2026-01-18,1900,Cancelado,Pagado,Registro de ejemplo Track I #15
+ACC0001,EXT009,2026-01-15,2026-01-18,1900,Reservado,Pagado,Registro de ejemplo Track I #16
+ACC0002,EXT011,2026-01-16,2026-01-18,1900,Reservado,Pagado,Registro de ejemplo Track I #17
+ACC0003,EXT011,2026-01-17,2026-01-18,1900,Reservado,Pagado,Registro de ejemplo Track I #18
+ACC0004,EXT009,2026-01-15,2026-01-18,1800,Reservado,Pagado,Registro de ejemplo Track I #19
+ACC0005,EXT013,2026-01-16,2026-01-18,300,Reservado,Pagado,Registro de ejemplo Track I #20
+ACC0005,EXT013,2026-01-16,2026-01-18,1500,Reservado,Pagado,Registro de ejemplo Track I #21

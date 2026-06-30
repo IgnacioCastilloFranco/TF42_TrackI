@@ -1,0 +1,385 @@
+Proyecto aplicado de Salesforce Platform Developer
+
+El objetivo de este proyecto es aplicar de forma práctica los conocimientos clave de la
+certificación Salesforce Certified Platform Developer a través de una evolución funcional
+real sobre Salesforce, cubriendo automatización, desarrollo Apex, interfaz Lightning,
+asincronía, seguridad, testing y despliegue.
+1. Contexto Estratégico
+AlquilaVehículo S.L. es una empresa nacional de alquiler de coches y motos con presencia
+en múltiples ciudades. Durante el Track I del proyecto Salesforce se construyó una
+aplicación base para la gestión de:•
+
+Vehículos
+Alquileres
+Clientes (Accounts)
+Reportes básicos
+Automatizaciones simples
+
+La solución actual funciona correctamente en escenarios de bajo volumen y reglas simples.
+Sin embargo, tras el crecimiento del negocio en el último año:•
+
+El número de alquileres ha aumentado un 240%
+Se han diversificado las tarifas
+Existen políticas de aprobación por riesgo financiero
+Se requieren procesos automáticos post-alquiler
+El equipo operativo necesita una interfaz más eficiente
+Se han detectado errores humanos en cálculos manuales
+
+La dirección ha aprobado un Track II de evolución técnica con foco en:•
+
+Robustez
+Escalabilidad
+Automatización avanzada
+Reducción de errores
+Mejora de experiencia operativa
+
+
+El equipo de desarrollo deberá evolucionar la plataforma Salesforce para:
+1. Automatizar completamente el cálculo de precios.
+2. Garantizar que no existan conflictos de disponibilidad.
+3. Implementar control financiero mediante aprobaciones.
+4. Crear una consola operativa moderna basada en Lightning Web Components.
+5. Automatizar la generación de facturación.
+6. Incorporar capacidades de búsqueda rápida de flota.
+7. Elevar el estándar de testing y calidad técnica.8. Establecer un modelo de despliegue basado en Salesforce DX.
+Facturación automática (Async Processing)
+
+4. Requerimientos Funcionales
+Los siguientes requerimientos funcionales describen las capacidades que deberán
+implementarse. 
+
+4.1. Sistema de Precios Dinámicos (Pricing Engine)
+Situación Actual
+El campo “Coste Total” del alquiler se introduce manualmente.
+Esto ha generado:
+
+Errores de cálculo
+Inconsistencias entre usuarios
+Pérdidas financieras
+Falta de trazabilidad
+
+Requerimiento de Negocio
+El sistema debe calcular automáticamente el coste total del alquiler en función de:•
+
+Tipo de vehículo
+Temporada (Alta / Media / Baja)
+Duración del alquiler
+Política de fidelidad del cliente
+Penalización por retraso en devolución
+
+Reglas de Negocio
+1. El precio por día dependerá de una configuración administrable.
+2. Si un cliente ha completado 3 o más alquileres en los últimos 12 meses, recibirá un
+descuento del 5%.
+3. Si la devolución se produce fuera del periodo contratado, se aplicará una
+penalización del 25% por día adicional.
+4. No se permitirá crear un alquiler si no existe tarifa aplicable.
+Restricciones
+
+El cálculo debe ser automático.
+No puede depender de intervención manual.
+Debe ser consistente incluso en cargas masivas.
+Debe evitar consultas innecesarias a base de datos.
+
+Criterios de Aceptación
+El campo Coste Total se rellena automáticamente.
+En ausencia de tarifa válida, el sistema bloquea la operación.
+El cálculo es consistente para múltiples registros en la misma transacción.
+La temporada se debe calcular según las fechas seleccionadas(Alta(Enero, Abril,
+Julio, Agosto, Diciembre), Media(Febrero, Mayo, Junio, Septiembre), Baja(Marzo,
+Octubre, Noviembre))
+
+Guía funcional de uso y resultado esperado
+Este apartado sirve como guía funcional para que el desarrollador comprenda con claridad
+cómo debe comportarse el sistema de cálculo automático del alquiler desde el punto de
+vista del usuario final. El objetivo es que, al crear o editar un alquiler, Salesforce determine
+automáticamente el importe total aplicando las reglas de precio por tipo de vehículo,
+temporada, duración del alquiler, fidelidad del cliente y penalización por retraso, sin que el
+usuario tenga que intervenir manualmente en el cálculo.
+Flujo principal esperado
+El usuario accede al formulario de creación de un nuevo alquiler e informa, como mínimo,
+el cliente, el vehículo, la fecha de inicio y la fecha de fin. Una vez guarda el registro, el
+sistema calcula automáticamente el campo Coste Total en función de la tarifa aplicable y
+del número de días contratados.
+Escenario de fidelidad esperado
+Si el cliente ha completado 3 o más alquileres en los últimos 12 meses, el sistema debe
+aplicar automáticamente el descuento del 5% sobre el importe resultante. El usuario no
+debe seleccionar manualmente ningún descuento, sino ver reflejado el cálculo ya aplicado
+en el alquiler final.
+Escenario de penalización esperado
+Si la devolución se produce fuera del periodo contratado, el sistema debe recalcular el
+coste final incorporando la penalización correspondiente por cada día adicional. El importe
+final debe reflejar claramente que se ha producido un recálculo automático.
+Escenario de error esperado
+Si el usuario intenta crear un alquiler para el que no existe una tarifa válida, el sistema debe
+bloquear la operación y mostrar un mensaje claro que indique que no existe una
+configuración de precio aplicable para ese caso.
+
+Resultado esperado
+El usuario nunca debe informar manualmente el Coste Total. El sistema debe ser capaz de
+calcularlo de forma consistente en todos los escenarios funcionales definidos,
+garantizando trazabilidad, coherencia y fiabilidad operativa.
+
+4.2. Control de disponibilidad de Flota
+Situación Actual
+El sistema permite crear alquileres con fechas solapadas para un mismo vehículo.
+Esto ha provocado:
+Conflictos operativos
+Reclamaciones de clientes
+Cancelaciones de última hora
+
+Requerimiento de Negocio
+Un vehículo no puede estar asignado a más de un alquiler activo (Reservado o En curso) en
+el mismo rango de fechas.
+Reglas de Negocio
+Se considerará solapamiento cuando:
+
+startA < endB AND endA > startB
+
+Se permitirá que:
+Un alquiler termine el mismo día que otro empieza.
+
+Restricciones
+La validación debe realizarse antes de confirmar el registro.
+Debe funcionar correctamente en operaciones masivas.
+No debe generar consultas innecesarias.
+
+Criterios de Aceptación
+
+No se pueden guardar alquileres conflictivos.
+El mensaje de error debe ser claro para el usuario.
+El sistema debe seguir funcionando correctamente bajo volumen alto.
+
+Guía funcional de uso y resultado esperado
+Este apartado sirve como guía funcional para mostrar cómo debe comportarse el sistema
+al validar la disponibilidad de un vehículo antes de confirmar un alquiler. El objetivo esimpedir que un mismo vehículo quede asignado a más de un alquiler activo en fechas
+incompatibles, evitando conflictos operativos y errores de planificación.
+Flujo principal esperado
+El usuario crea un nuevo alquiler para un vehículo que no tiene reservas activas en conflicto
+durante el rango de fechas informado. El sistema debe permitir guardar el registro con
+normalidad.
+Escenario de solapamiento no permitido
+Si ya existe un alquiler activo para un mismo vehículo en un rango de fechas incompatible,
+el sistema debe impedir la creación del nuevo alquiler y mostrar un mensaje de error
+comprensible para el usuario.
+Escenario límite permitido
+El sistema debe permitir que un alquiler termine el mismo día que otro empieza, ya que ese
+caso no debe considerarse solapamiento funcional.
+Resultado esperado
+No deben poder guardarse alquileres conflictivos para un mismo vehículo cuando exista
+solapamiento real de fechas. El sistema debe bloquear correctamente los casos no válidos
+y permitir los casos límite definidos por negocio.
+
+4.3. Sistema de Aprobaciones Financieras
+Situación Actual
+Todos los alquileres se confirman automáticamente sin control de importe.
+Requerimiento de Negocio
+Se requiere un sistema de aprobación escalonado en la creación del Alquiler:
+3.000 € → aprobación de Gerente.
+10.000 € → doble aprobación (Gerente + Responsable Financiero).
+
+Durante el proceso de aprobación:
+El alquiler debe quedar bloqueado para edición.
+Debe existir trazabilidad del resultado.
+
+En caso de rechazo:
+El alquiler pasa a estado Cancelado.
+Debe registrarse el motivo.
+
+Criterios de Aceptación
+El flujo de aprobación se activa automáticamente.
+Los estados se actualizan correctamente.
+El sistema mantiene coherencia incluso si el importe cambia.
+
+Guía funcional de uso y resultado esperado
+Este apartado sirve como guía funcional para mostrar el comportamiento esperado del
+sistema de aprobación financiera de alquileres según el importe total. El objetivo es que el
+desarrollador entienda con claridad cómo debe activarse el flujo, cómo deben evolucionar
+los estados y qué evidencias deben quedar registradas en el proceso.
+Flujo principal esperado para importes superiores a 3.000 €
+Cuando el usuario cree o actualice un alquiler cuyo importe supere los 3.000 €, el sistema
+debe lanzar automáticamente un proceso de aprobación dirigido al Gerente. Durante este
+proceso, el alquiler debe quedar bloqueado para edición.
+Flujo esperado para importes superiores a 10.000 €
+Cuando el importe supere los 10.000 €, el sistema debe activar un circuito de doble
+aprobación. Primero debe aprobar el Gerente y, posteriormente, el Responsable Financiero.
+El historial de aprobación debe permitir consultar claramente cada fase del proceso.
+Escenario de rechazo esperado
+Si alguno de los aprobadores rechaza la solicitud, el sistema debe actualizar el alquiler a
+estado Cancelado y registrar el motivo del rechazo de manera visible y trazable.
+Resultado esperado
+El flujo de aprobación debe activarse automáticamente en función del importe, el registro
+debe quedar protegido durante la revisión y el resultado final debe ser totalmente trazable
+tanto en aprobación simple como en doble aprobación.
+
+4.4. Consola Operativa (Lightning Web Component)
+Situación Actual
+Los usuarios deben navegar entre múltiples pantallas para gestionar alquileres.
+Requerimiento de Negocio
+Se debe construir una consola integrada en la página de Account que permita:•
+
+Visualizar alquileres activos.
+Crear nuevos alquileres.
+Simular precio antes de guardar.
+Mostrar mensajes de error en tiempo real.
+Filtrar y ordenar registros.
+
+Requisitos de Experiencia
+Interfaz clara.
+Respuesta rápida.
+Mensajes comprensibles.
+Sin recargas completas de página.
+
+Restricciones Técnicas
+
+Debe respetar permisos del usuario.
+No debe exponer datos sin control.
+Debe manejar errores correctamente.
+
+Guía funcional de uso y resultado esperado
+Este apartado debe servir como guía funcional y visual del componente que se espera
+construir dentro de la página de Account. Su finalidad es que el desarrollador comprenda
+cómo debe visualizarse la solución final y qué acciones debe poder ejecutar el usuario
+desde una consola operativa moderna y eficiente.
+Flujo principal esperado
+Al acceder a una cuenta de cliente, el usuario debe visualizar dentro de la misma página
+una consola integrada que muestre los alquileres activos relacionados con esa cuenta,
+permitiendo una consulta rápida de la información operativa.
+Creación de alquiler desde la consola
+Desde la propia consola, el usuario debe poder iniciar la creación de un nuevo alquiler sin
+abandonar la página actual. El flujo debe ser ágil, claro y sin recargas completas de pantalla.
+Simulación de precio antes de guardar
+Antes de confirmar el alquiler, el usuario debe poder visualizar una simulación del precio
+resultante, permitiendo anticipar el impacto económico antes del guardado definitivo.
+Mensajes de error y validaciones
+Si se produce una situación no válida, como falta de datos, conflicto de disponibilidad o
+cualquier otra regla funcional incumplida, la consola debe mostrar el error de forma clara e
+inmediata, sin recargar la página.
+Filtrado y ordenación
+La consola debe permitir filtrar y ordenar los alquileres visibles para facilitar el trabajo diario
+del usuario.
+
+Resultado esperado
+La experiencia final debe ser fluida, moderna, integrada en Lightning Experience y orientada
+a productividad. El componente debe reducir la navegación entre pantallas y ofrecer una
+gestión centralizada de los alquileres del cliente.
+
+4.5. Facturación automática (Async Processing)
+Situación Actual
+La facturación se gestiona fuera del sistema.
+Requerimiento de Negocio
+Cuando un alquiler cambie a estado “Completado”:
+1. Debe generarse automáticamente un registro de factura.
+2. Debe enviarse notificación por correo al cliente.
+3. Debe registrarse un log del proceso.
+Restricciones
+El proceso no debe bloquear la operación principal.
+Debe garantizar que no se generen facturas duplicadas.
+Debe registrar errores en caso de fallo.
+
+Guía funcional de uso y resultado esperado
+Este apartado sirve como guía funcional para mostrar cómo debe comportarse el sistema
+cuando un alquiler se completa y debe iniciarse automáticamente el proceso de
+facturación. El objetivo es que el desarrollador entienda el flujo funcional esperado y cómo
+deben quedar reflejados tanto el resultado como la trazabilidad del proceso.
+Flujo principal esperado
+Cuando un alquiler cambie a estado Completado, el sistema debe lanzar automáticamente
+el proceso necesario para generar una factura relacionada con dicho alquiler, sin bloquear
+la operación principal que ha realizado el usuario.
+Notificación al cliente
+Una vez generada la factura, el sistema debe enviar una notificación por correo al cliente o
+dejar evidencia funcional clara de que el envío ha sido lanzado correctamente.
+Trazabilidad del proceso
+El sistema debe registrar un log, traza o evidencia técnica que permita consultar si el
+proceso se ha ejecutado correctamente o si ha fallado, incluyendo el detalle suficiente para
+revisar incidencias.
+
+Prevención de duplicados
+Si el alquiler ya ha sido facturado anteriormente, el sistema no debe generar una nueva
+factura duplicada para el mismo caso.
+Resultado esperado
+La generación de factura debe estar desacoplada de la operación principal del usuario,
+ejecutarse de forma robusta y dejar siempre trazabilidad suficiente para revisar su
+resultado funcional y técnico.
+
+4.6. Buscador Global de Flota
+Situación Actual
+La búsqueda por matrícula o modelo es limitada.
+Requerimiento de Negocio
+Implementar búsqueda rápida que permita localizar vehículos por:
+
+Matrícula
+Marca
+Modelo
+
+La búsqueda debe:
+Ser tolerante a texto parcial.
+Devolver resultados estructurados.
+Ser rápida.
+
+Guía funcional de uso y resultado esperado
+Este apartado sirve como guía funcional para definir el comportamiento esperado del
+buscador de flota. El objetivo es que el desarrollador pueda visualizar cómo debe ser la
+experiencia de búsqueda de vehículos y qué resultados debe obtener el usuario en
+escenarios habituales de uso.
+Flujo principal esperado
+El usuario desde la Home page debe disponer de una funcionalidad de búsqueda rápida que
+permita localizar vehículos por matrícula, marca o modelo. La búsqueda debe ser ágil,
+intuitiva y devolver resultados estructurados.
+Búsqueda por matrícula
+El usuario introduce una matrícula completa o parcial y el sistema devuelve los vehículos
+coincidentes.
+
+Búsqueda por marca o modelo
+El usuario puede localizar vehículos a partir de la marca o del modelo, incluso aunque el
+texto informado no sea completo.
+Acceso al detalle
+Desde el resultado de búsqueda, el usuario debe poder acceder fácilmente a la ficha del
+vehículo correspondiente.
+Resultado esperado
+La búsqueda debe ser tolerante a texto parcial, rápida y útil para el equipo operativo. Los
+resultados deben presentarse de manera clara y facilitar la identificación inmediata del
+vehículo correcto.
+
+5. Requerimientos Técnicos Globales
+El equipo deberá cumplir con:
+Separación de responsabilidades (Trigger → Handler → Service).
+Bulkification obligatoria.
+No SOQL/DML en loops.
+Manejo correcto de excepciones.
+Uso adecuado de asincronía.
+Seguridad: respetar CRUD y FLS.
+Cobertura de test mínima 85%.
+Tests con escenarios negativos y masivos.
+Uso de Salesforce DX para despliegue.
+
+6. Criterios de Calidad
+El sistema se considerará aceptado si:
+
+No existen errores en operaciones concurrentes.
+Los tests pasan correctamente.
+La cobertura cumple estándares.
+No existen violaciones de límites de governor.
+El código es legible y mantenible.
+
+7. Entregables del Equipo de Desarrollo
+1. Metadatos desplegables mediante Salesforce DX.
+2. Suite completa de tests automatizados.
+
+3. Documento técnico breve con decisiones de arquitectura.
+4. Evidencia de validación funcional.
+5. README con pasos de despliegue.
+
+8. Consideraciones Finales
+Este proyecto debe ser tratado como una evolución real de producto, no como un ejercicio
+académico.
+Se espera que el equipo:
+
+Tome decisiones justificadas.
+Analice impacto en arquitectura.
+Mantenga estándares de desarrollo profesional.
+Piense en escalabilidad futura.
+
+
+
+
