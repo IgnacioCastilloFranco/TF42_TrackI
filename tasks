@@ -1,0 +1,48 @@
+# Track II - AlquilaVehículo - Tareas
+
+## Paso 0: Setup de la Org
+- [/] Conectar org Salesforce (RetoNTT)
+- [/] Desplegar metadatos Track I a la org
+- [/] Verificar que la org tiene los objetos base
+
+## Fase 1: Sistema de Precios Dinámicos
+- [/] Crear objeto `VRT_Tarifa__c` con campos
+- [/] Crear campos adicionales en `VRT_Rental__c`
+- [/] Crear clase `VRT_SRV_PricingEngine`
+- [ ] Modificar trigger `VRT_TRG_Rental` (añadir before insert/update)
+- [ ] Modificar handler `VRT_TRG_RentalHandler`
+- [ ] Crear tests `VRT_SRV_PricingEngine_Test`
+
+## Fase 2: Control de Disponibilidad
+- [ ] Crear clase `VRT_SRV_AvailabilityChecker`
+- [ ] Integrar en handler (before insert/update)
+- [ ] Crear tests `VRT_SRV_AvailabilityChecker_Test`
+
+## Fase 3: Aprobaciones Financieras
+- [ ] Crear Approval Process metadata
+- [ ] Crear clase `VRT_SRV_ApprovalManager`
+- [ ] Crear tests `VRT_SRV_ApprovalManager_Test`
+
+## Fase 4: Consola Operativa (LWC)
+- [ ] Crear controller `VRT_CTR_RentalConsole`
+- [ ] Crear LWC `vrtRentalConsole`
+- [ ] Crear tests `VRT_CTR_RentalConsole_Test`
+- [ ] Añadir LWC a FlexiPage de Account
+
+## Fase 5: Facturación Automática
+- [ ] Crear objeto `VRT_Factura__c`
+- [ ] Crear objeto `VRT_LogProceso__c`
+- [ ] Crear clase `VRT_SRV_InvoiceGenerator` (Queueable)
+- [ ] Integrar en handler (after update → Completado)
+- [ ] Crear tests `VRT_SRV_InvoiceGenerator_Test`
+
+## Fase 6: Buscador Global de Flota
+- [ ] Crear controller `VRT_CTR_FleetSearch`
+- [ ] Crear LWC `vrtFleetSearch`
+- [ ] Crear tests `VRT_CTR_FleetSearch_Test`
+
+## Fase 7: Testing y Calidad
+- [ ] Crear `VRT_TestDataFactory`
+- [ ] Verificar cobertura ≥ 85%
+- [ ] Ejecutar todos los tests
+- [ ] Validar despliegue completo
