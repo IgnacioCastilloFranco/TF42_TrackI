@@ -9,9 +9,9 @@
 - [/] Crear objeto `VRT_Tarifa__c` con campos
 - [/] Crear campos adicionales en `VRT_Rental__c`
 - [/] Crear clase `VRT_SRV_PricingEngine`
-- [ ] Modificar trigger `VRT_TRG_Rental` (añadir before insert/update)
-- [ ] Modificar handler `VRT_TRG_RentalHandler`
-- [ ] Crear tests `VRT_SRV_PricingEngine_Test`
+- [/] Modificar trigger `VRT_TRG_Rental` (añadir before insert/update)
+- [/] Modificar handler `VRT_TRG_RentalHandler`
+- [/] Crear tests `VRT_SRV_PricingEngine_Test`
 
 ## Fase 2: Control de Disponibilidad
 - [ ] Crear clase `VRT_SRV_AvailabilityChecker`
