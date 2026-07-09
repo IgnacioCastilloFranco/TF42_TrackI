@@ -22,7 +22,7 @@ public class VRT_TRG_RentalHandler {
         VRT_SRV_PricingEngine.calculateTotalCost(triggerNew);
 
         // Validar disponibilidad del vehículo en las fechas solicitadas
-        // TODO (Fase 2): VRT_SRV_AvailabilityChecker.validateAvailability(triggerNew);
+        VRT_SRV_AvailabilityChecker.validateAvailability(triggerNew);
     }
 
     // ──────────────────────────────────────────────────────────────────────
@@ -55,7 +55,7 @@ public class VRT_TRG_RentalHandler {
             VRT_SRV_PricingEngine.calculateTotalCost(rentalsToReprice);
 
             // Validar disponibilidad del vehículo en las nuevas fechas
-            // TODO (Fase 2): VRT_SRV_AvailabilityChecker.validateAvailability(rentalsToReprice);
+            VRT_SRV_AvailabilityChecker.validateAvailability(rentalsToReprice);
         }
     }
 

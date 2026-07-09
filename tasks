@@ -14,7 +14,7 @@
 - [/] Crear tests `VRT_SRV_PricingEngine_Test`
 
 ## Fase 2: Control de Disponibilidad
-- [ ] Crear clase `VRT_SRV_AvailabilityChecker`
+- [/] Crear clase `VRT_SRV_AvailabilityChecker`
 - [ ] Integrar en handler (before insert/update)
 - [ ] Crear tests `VRT_SRV_AvailabilityChecker_Test`
 
