@@ -15,8 +15,8 @@
 
 ## Fase 2: Control de Disponibilidad
 - [/] Crear clase `VRT_SRV_AvailabilityChecker`
-- [ ] Integrar en handler (before insert/update)
-- [ ] Crear tests `VRT_SRV_AvailabilityChecker_Test`
+- [/] Integrar en handler (before insert/update)
+- [/] Crear tests `VRT_SRV_AvailabilityChecker_Test`
 
 ## Fase 3: Aprobaciones Financieras
 - [ ] Crear Approval Process metadata
