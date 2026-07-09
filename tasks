@@ -20,7 +20,7 @@
 
 ## Fase 3: Aprobaciones Financieras
 - [/] Crear Approval Process metadata
-- [ ] Crear clase `VRT_SRV_ApprovalManager`
+- [/] Crear clase `VRT_SRV_ApprovalManager`
 - [ ] Crear tests `VRT_SRV_ApprovalManager_Test`
 
 ## Fase 4: Consola Operativa (LWC)

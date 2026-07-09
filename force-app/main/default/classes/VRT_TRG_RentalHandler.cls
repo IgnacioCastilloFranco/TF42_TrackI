@@ -6,6 +6,7 @@
  * 				08/04/2024 - AMADRIDN - Added comments
  * 				12/04/2024 - AMADRIDN - Added onAfterUpdate
  * 				07/07/2026 - ICASTILLOF - Added onBeforeInsert/onBeforeUpdate for pricing & availability
+ * 				09/07/2026 - ICASTILLOF - Added approval submission in onAfterInsert/onAfterUpdate
  */
 public class VRT_TRG_RentalHandler {
 
@@ -69,6 +70,9 @@ public class VRT_TRG_RentalHandler {
      */
     public void onAfterInsert(List<VRT_Rental__c> triggerNew) {
         VRT_TRG_RentalHandlerHelper.updateConditionVehicle(triggerNew);
+
+        // Enviar a aprobación financiera si el coste supera el umbral
+        VRT_SRV_ApprovalManager.submitForApprovalOnInsert(triggerNew);
     }
 
     // ──────────────────────────────────────────────────────────────────────
@@ -82,5 +86,8 @@ public class VRT_TRG_RentalHandler {
      */
     public void onAfterUpdate(Map<Id, VRT_Rental__c> oldMap, Map<Id, VRT_Rental__c> newMap) {
         VRT_TRG_RentalHandlerHelper.updateVehicleRentalCompleted(oldMap, newMap);
+
+        // Enviar a aprobación financiera si el coste ha cambiado y supera el umbral
+        VRT_SRV_ApprovalManager.submitForApprovalOnUpdate(oldMap, newMap);
     }
 }
