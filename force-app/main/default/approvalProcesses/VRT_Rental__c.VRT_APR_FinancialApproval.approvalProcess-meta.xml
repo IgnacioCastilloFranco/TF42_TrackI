@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>Manager</name>
+                <type>userHierarchyField</type>
+            </approver>
+        </assignedApprover>
+        <label>Aprobacion Gerente</label>
+        <name>Aprobacion_Gerente</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>Manager</name>
+                <type>userHierarchyField</type>
+            </approver>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>VRT_Rental__c.VRT_DIV_TotalCost__c</field>
+                <operation>greaterThan</operation>
+                <value>10000</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Aprobacion Responsable Financiero</label>
+        <name>Aprobacion_Responsable_Financiero</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Aprobacion financiera escalonada para alquileres de VRT_Rental__c.</description>
+    <entryCriteria>
+        <criteriaItems>
+            <field>VRT_Rental__c.VRT_DIV_TotalCost__c</field>
+            <operation>greaterThan</operation>
+            <value>3000</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalRejectionActions>
+        <action>
+            <name>Set_Status_Cancelado_On_Reject</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <label>Aprobacion Financiera Alquiler</label>
+    <nextAutomatedApprover>
+        <userHierarchyField>Manager</userHierarchyField>
+    </nextAutomatedApprover>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>
