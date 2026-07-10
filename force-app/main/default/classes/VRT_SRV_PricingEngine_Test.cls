@@ -479,8 +479,12 @@ private class VRT_SRV_PricingEngine_Test {
         Account acc = new Account(Name = 'Bulk Account');
         insert acc;
 
-        VRT_Vehicle__c vehicle = createVehicle('Coche');
-        insert vehicle;
+        // Crear 200 vehículos para evitar conflictos de solapamiento
+        List<VRT_Vehicle__c> vehicles = new List<VRT_Vehicle__c>();
+        for (Integer i = 0; i < 200; i++) {
+            vehicles.add(createVehicle('Coche'));
+        }
+        insert vehicles;
 
         VRT_Tarifa__c tarifa = createTarifa('Baja', 'coche', 40.00);
         insert tarifa;
@@ -491,7 +495,7 @@ private class VRT_SRV_PricingEngine_Test {
 
         List<VRT_Rental__c> rentals = new List<VRT_Rental__c>();
         for (Integer i = 0; i < 200; i++) {
-            rentals.add(createRental(vehicle.Id, acc.Id, startDate, endDate));
+            rentals.add(createRental(vehicles[i].Id, acc.Id, startDate, endDate));
         }
 
         // Act: insert bulk dispara trigger → before insert → calculateTotalCost
