@@ -24,10 +24,10 @@
 - [/] Crear tests `VRT_SRV_ApprovalManager_Test`
 
 ## Fase 4: Consola Operativa (LWC)
-- [ ] Crear controller `VRT_CTR_RentalConsole`
-- [ ] Crear LWC `vrtRentalConsole`
-- [ ] Crear tests `VRT_CTR_RentalConsole_Test`
-- [ ] Añadir LWC a FlexiPage de Account
+- [/] Crear controller `VRT_CTR_RentalConsole`
+- [/] Crear LWC `vrtRentalConsole`
+- [/] Crear tests `VRT_CTR_RentalConsole_Test`
+- [/] Añadir LWC a FlexiPage de Account
 
 ## Fase 5: Facturación Automática
 - [ ] Crear objeto `VRT_Factura__c`

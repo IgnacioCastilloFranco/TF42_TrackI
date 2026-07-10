@@ -11,7 +11,7 @@
             <div class="slds-p-around_medium">
                 <div class="slds-text-color_error slds-text-body_regular">
                     <lightning-icon icon-name="utility:error" size="x-small" variant="error"
-                                    class="slds-m-right_x-small"></lightning-icon>
+                        class="slds-m-right_x-small"></lightning-icon>
                     {error}
                 </div>
             </div>
@@ -62,20 +62,12 @@
         <div class="slds-p-horizontal_medium slds-p-top_medium">
             <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-end">
                 <div class="slds-col">
-                    <lightning-combobox
-                        label="Filtrar por estado"
-                        value={selectedStatus}
-                        options={statusOptions}
-                        onchange={handleStatusChange}
-                        variant="label-hidden"
-                        placeholder="Filtrar por estado">
+                    <lightning-combobox label="Filtrar por estado" value={selectedStatus} options={statusOptions}
+                        onchange={handleStatusChange} variant="label-hidden" placeholder="Filtrar por estado">
                     </lightning-combobox>
                 </div>
                 <div class="slds-col">
-                    <lightning-button
-                        label="Refrescar"
-                        icon-name="utility:refresh"
-                        onclick={handleRefresh}
+                    <lightning-button label="Refrescar" icon-name="utility:refresh" onclick={handleRefresh}
                         variant="neutral">
                     </lightning-button>
                 </div>
@@ -88,21 +80,17 @@
                 <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small">
                     {tableTitle}
                 </p>
-                <lightning-datatable
-                    key-field="Id"
-                    data={filteredRentals}
-                    columns={columns}
-                    hide-checkbox-column
+                <lightning-datatable key-field="Id" data={filteredRentals} columns={columns} hide-checkbox-column
                     show-row-number-column>
                 </lightning-datatable>
             </template>
 
-            <template lwc:if={!hasRentals}>
-                <template lwc:if={!isLoading}>
+            <template lwc:if="{!hasRentals}">
+                <template lwc:if="{!isLoading}">
                     <div class="slds-align_absolute-center slds-p-vertical_large">
                         <div class="slds-text-align_center">
                             <lightning-icon icon-name="utility:info" size="large"
-                                            class="slds-m-bottom_small"></lightning-icon>
+                                class="slds-m-bottom_small"></lightning-icon>
                             <p class="slds-text-body_regular slds-text-color_weak">
                                 No se encontraron alquileres para esta cuenta.
                             </p>
