@@ -49,3 +49,22 @@
     letter-spacing: 0.5px;
     margin-top: 0.25rem;
 }
+
+/* Panel de Simulación */
+.simulation-panel {
+    background-color: var(--slds-g-color-neutral-base-97, #f9f9f9);
+    border: 1px solid var(--slds-g-color-neutral-base-85, #e5e5e5);
+    border-radius: 0.25rem;
+}
+
+.simulation-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--slds-g-color-success-base-30, #1c6b37);
+    margin-left: 0.25rem;
+}
+
+.badge-text-bold {
+    font-weight: 700;
+}
+

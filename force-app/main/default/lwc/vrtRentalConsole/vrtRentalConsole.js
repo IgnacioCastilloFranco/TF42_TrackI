@@ -1,6 +1,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import getRentalsByAccount from '@salesforce/apex/VRT_CTR_RentalConsole.getRentalsByAccount';
 import getRentalSummary from '@salesforce/apex/VRT_CTR_RentalConsole.getRentalSummary';
+import simulateAndValidateRental from '@salesforce/apex/VRT_CTR_RentalConsole.simulateAndValidateRental';
 import { refreshApex } from '@salesforce/apex';
 
 // Columnas de la datatable
@@ -90,6 +91,20 @@ export default class VrtRentalConsole extends LightningElement {
     isLoading = true;
     error;
 
+    // Modal y Formulario de Simulación
+    isModalOpen = false;
+    formVehicleId;
+    formStartDate;
+    formEndDate;
+    isAvailable = false;
+    simulatedPriceRaw = 0;
+    simulationError;
+    isSimulating = false;
+
+    // Ordenación
+    sortBy;
+    sortDirection;
+
     // ──────────────────────────────────────────────────────────────────────
     // Wire: Obtener alquileres
     // ──────────────────────────────────────────────────────────────────────
@@ -175,6 +190,21 @@ export default class VrtRentalConsole extends LightningElement {
         return `Alquileres (${count})`;
     }
 
+    get simulationShow() {
+        return this.formVehicleId && this.formStartDate && this.formEndDate;
+    }
+
+    get simulatedPrice() {
+        return new Intl.NumberFormat('es-ES', {
+            style: 'currency',
+            currency: 'EUR'
+        }).format(this.simulatedPriceRaw || 0);
+    }
+
+    get isSaveDisabled() {
+        return !this.isAvailable || this.isSimulating;
+    }
+
     // ──────────────────────────────────────────────────────────────────────
     // Handlers
     // ──────────────────────────────────────────────────────────────────────
@@ -194,6 +224,91 @@ export default class VrtRentalConsole extends LightningElement {
         });
     }
 
+    openModal() {
+        this.formVehicleId = undefined;
+        this.formStartDate = undefined;
+        this.formEndDate = undefined;
+        this.isAvailable = false;
+        this.simulatedPriceRaw = 0;
+        this.simulationError = undefined;
+        this.isModalOpen = true;
+    }
+
+    closeModal() {
+        this.isModalOpen = false;
+    }
+
+    handleFormChange(event) {
+        const fieldName = event.target.fieldName;
+        let value = event.detail.value;
+
+        // Tratar arrays en lookups
+        if (Array.isArray(value) && value.length > 0) {
+            value = value[0];
+        }
+
+        if (fieldName === 'VRT_LKP_Vehicle__c') {
+            this.formVehicleId = value;
+        } else if (fieldName === 'VRT_DAT_InitialDate__c') {
+            this.formStartDate = value;
+        } else if (fieldName === 'VRT_DAT_FinalDate__c') {
+            this.formEndDate = value;
+        }
+
+        if (this.simulationShow) {
+            this.runSimulation();
+        }
+    }
+
+    runSimulation() {
+        this.isSimulating = true;
+        this.simulationError = undefined;
+
+        simulateAndValidateRental({
+            vehicleId: this.formVehicleId,
+            accountId: this.recordId,
+            startDate: this.formStartDate,
+            endDate: this.formEndDate
+        })
+        .then(result => {
+            this.isAvailable = result.isAvailable;
+            if (result.isAvailable) {
+                this.simulatedPriceRaw = result.price;
+            } else {
+                this.simulationError = result.errorMessage;
+                this.simulatedPriceRaw = 0;
+            }
+        })
+        .catch(err => {
+            this.isAvailable = false;
+            this.simulationError = this.reduceErrors(err);
+            this.simulatedPriceRaw = 0;
+        })
+        .finally(() => {
+            this.isSimulating = false;
+        });
+    }
+
+    handleFormSubmit() {
+        this.isLoading = true;
+    }
+
+    handleFormSuccess() {
+        this.isModalOpen = false;
+        this.isLoading = false;
+        this.handleRefresh();
+    }
+
+    handleFormError() {
+        this.isLoading = false;
+    }
+
+    handleSort(event) {
+        this.sortBy = event.detail.fieldName;
+        this.sortDirection = event.detail.sortDirection;
+        this.sortData(this.sortBy, this.sortDirection);
+    }
+
     // ──────────────────────────────────────────────────────────────────────
     // Helpers
     // ──────────────────────────────────────────────────────────────────────
@@ -206,6 +321,33 @@ export default class VrtRentalConsole extends LightningElement {
                 r => r.VRT_SEL_Status__c === this.selectedStatus
             );
         }
+        if (this.sortBy) {
+            this.sortData(this.sortBy, this.sortDirection);
+        }
+    }
+
+    sortData(fieldname, direction) {
+        let parseData = [...this.filteredRentals];
+        let isUrl = fieldname === 'rentalUrl';
+        let key = isUrl ? 'Name' : fieldname;
+
+        let keyValue = (a) => {
+            return a[key];
+        };
+
+        let isReverse = direction === 'asc' ? 1 : -1;
+
+        parseData.sort((x, y) => {
+            let xVal = keyValue(x) ? keyValue(x) : '';
+            let yVal = keyValue(y) ? keyValue(y) : '';
+
+            if (typeof xVal === 'number' && typeof yVal === 'number') {
+                return (xVal - yVal) * isReverse;
+            }
+            return xVal.toString().localeCompare(yVal.toString()) * isReverse;
+        });
+
+        this.filteredRentals = parseData;
     }
 
     getStatusClass(status) {

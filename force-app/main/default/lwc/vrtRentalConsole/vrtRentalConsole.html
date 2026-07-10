@@ -1,12 +1,14 @@
 <template>
     <lightning-card title="Consola de Alquileres" icon-name="standard:contract">
+        <!-- Botón para abrir modal de creación -->
+        <lightning-button label="Nuevo Alquiler" slot="actions" icon-name="utility:add" onclick={openModal}></lightning-button>
 
         <!-- Spinner de carga -->
         <template lwc:if={isLoading}>
             <lightning-spinner alternative-text="Cargando..." size="medium"></lightning-spinner>
         </template>
 
-        <!-- Error -->
+        <!-- Error general -->
         <template lwc:if={error}>
             <div class="slds-p-around_medium">
                 <div class="slds-text-color_error slds-text-body_regular">
@@ -81,24 +83,102 @@
                     {tableTitle}
                 </p>
                 <lightning-datatable key-field="Id" data={filteredRentals} columns={columns} hide-checkbox-column
-                    show-row-number-column>
+                    show-row-number-column sorted-by={sortBy} sorted-direction={sortDirection} onsort={handleSort}>
                 </lightning-datatable>
             </template>
 
-            <template lwc:if="{!hasRentals}">
-                <template lwc:if="{!isLoading}">
-                    <div class="slds-align_absolute-center slds-p-vertical_large">
-                        <div class="slds-text-align_center">
-                            <lightning-icon icon-name="utility:info" size="large"
-                                class="slds-m-bottom_small"></lightning-icon>
-                            <p class="slds-text-body_regular slds-text-color_weak">
-                                No se encontraron alquileres para esta cuenta.
-                            </p>
-                        </div>
+            <template lwc:else>
+                <div class="slds-align_absolute-center slds-p-vertical_large">
+                    <div class="slds-text-align_center">
+                        <lightning-icon icon-name="utility:info" size="large"
+                            class="slds-m-bottom_small"></lightning-icon>
+                        <p class="slds-text-body_regular slds-text-color_weak">
+                            No se encontraron alquileres para esta cuenta.
+                        </p>
                     </div>
-                </template>
+                </div>
             </template>
         </div>
 
+        <!-- Modal para Crear Nuevo Alquiler -->
+        <template lwc:if={isModalOpen}>
+            <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Cerrar" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="Cerrar" size="small" variant="inverse"></lightning-icon>
+                            <span class="slds-assistive-text">Cerrar</span>
+                        </button>
+                        <h2 class="slds-text-heading_medium slds-hyphenate">Nuevo Alquiler</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <!-- Formulario de creación -->
+                        <lightning-record-edit-form object-api-name="VRT_Rental__c"
+                            onsubmit={handleFormSubmit}
+                            onsuccess={handleFormSuccess}
+                            onerror={handleFormError}>
+                            <lightning-messages></lightning-messages>
+
+                            <div class="slds-grid slds-wrap slds-gutters">
+                                <div class="slds-col slds-size_1-of-1 slds-m-bottom_x-small">
+                                    <lightning-input-field field-name="VRT_LKP_Vehicle__c" onchange={handleFormChange} required></lightning-input-field>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                                    <lightning-input-field field-name="VRT_DAT_InitialDate__c" onchange={handleFormChange} required></lightning-input-field>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                                    <lightning-input-field field-name="VRT_DAT_FinalDate__c" onchange={handleFormChange} required></lightning-input-field>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                                    <lightning-input-field field-name="VRT_SEL_Status__c" value="Reservado" onchange={handleFormChange} required></lightning-input-field>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-bottom_x-small">
+                                    <lightning-input-field field-name="VRT_SEL_PaymentStatus__c" value="Pagado" onchange={handleFormChange} required></lightning-input-field>
+                                </div>
+                                <!-- Campo Oculto para inyectar la Cuenta del cliente actual -->
+                                <lightning-input-field field-name="VRT_LKP_Account__c" value={recordId} class="slds-hide"></lightning-input-field>
+                            </div>
+
+                            <!-- Panel de Simulación / Disponibilidad en tiempo real -->
+                            <template lwc:if={simulationShow}>
+                                <div class="slds-box slds-m-top_medium simulation-panel">
+                                    <h3 class="slds-text-title_bold slds-m-bottom_small">Simulación del Alquiler</h3>
+                                    <template lwc:if={simulationError}>
+                                        <div class="slds-scoped-notification slds-media slds-media_center slds-theme_error" role="status">
+                                            <div class="slds-media__figure">
+                                                <lightning-icon icon-name="utility:error" size="small" variant="inverse"></lightning-icon>
+                                            </div>
+                                            <div class="slds-media__body">
+                                                <p>{simulationError}</p>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template lwc:else>
+                                        <div class="slds-grid slds-wrap slds-grid_vertical-align-center">
+                                            <div class="slds-col slds-size_1-of-2">
+                                                <span class="slds-text-body_regular">Vehículo:</span>
+                                                <span class="slds-badge slds-badge_lightest slds-m-left_x-small slds-theme_success badge-text-bold">
+                                                    Disponible
+                                                </span>
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-2 slds-text-align_right">
+                                                <span class="slds-text-body_regular">Precio Estimado: </span>
+                                                <span class="simulation-price">{simulatedPrice}</span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+
+                            <footer class="slds-modal__footer slds-m-top_medium">
+                                <lightning-button label="Cancelar" onclick={closeModal} class="slds-m-right_x-small"></lightning-button>
+                                <lightning-button label="Guardar Alquiler" type="submit" variant="brand" disabled={isSaveDisabled}></lightning-button>
+                            </footer>
+                        </lightning-record-edit-form>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template>
     </lightning-card>
 </template>

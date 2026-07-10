@@ -126,4 +126,79 @@ public with sharing class VRT_CTR_RentalConsole {
 
         return summary;
     }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // Simulación y validación en memoria
+    // ──────────────────────────────────────────────────────────────────────
+
+    public class SimulationResult {
+        @AuraEnabled public Decimal price          { get; set; }
+        @AuraEnabled public Boolean isAvailable    { get; set; }
+        @AuraEnabled public String errorMessage    { get; set; }
+    }
+
+    /**
+     * @desc    Simula el coste total de un alquiler y valida la disponibilidad
+     *          del vehículo en memoria sin realizar persistencia (DML).
+     * @param   vehicleId   Id del vehículo
+     * @param   accountId   Id del cliente (Account)
+     * @param   startDate   Fecha de inicio
+     * @param   endDate     Fecha de fin
+     */
+    @AuraEnabled
+    public static SimulationResult simulateAndValidateRental(Id vehicleId, Id accountId, Date startDate, Date endDate) {
+        SimulationResult result = new SimulationResult();
+        result.isAvailable = true;
+
+        if (vehicleId == null || accountId == null || startDate == null || endDate == null) {
+            result.errorMessage = 'Faltan datos obligatorios para la simulación.';
+            return result;
+        }
+
+        Integer duration = startDate.daysBetween(endDate);
+
+        Map<String, Object> rentalMap = new Map<String, Object>{
+            'attributes' => new Map<String, Object>{ 'type' => 'VRT_Rental__c' },
+            'VRT_LKP_Vehicle__c' => vehicleId,
+            'VRT_LKP_Account__c' => accountId,
+            'VRT_DAT_InitialDate__c' => startDate,
+            'VRT_DAT_FinalDate__c' => endDate,
+            'VRT_SEL_Status__c' => 'Reservado',
+            'VRT_SEL_PaymentStatus__c' => 'Pagado',
+            'VRT_FOR_Duration__c' => duration
+        };
+
+        VRT_Rental__c tempRental = (VRT_Rental__c) JSON.deserialize(
+            JSON.serialize(rentalMap),
+            VRT_Rental__c.class
+        );
+
+        // 1. Validar disponibilidad
+        try {
+            VRT_SRV_AvailabilityChecker.validateAvailability(new List<VRT_Rental__c>{ tempRental });
+            if (tempRental.hasErrors()) {
+                result.isAvailable = false;
+                List<String> errors = new List<String>();
+                for (Database.Error err : tempRental.getErrors()) {
+                    errors.add(err.getMessage());
+                }
+                result.errorMessage = String.join(errors, '; ');
+            }
+        } catch (Exception e) {
+            result.isAvailable = false;
+            result.errorMessage = 'Error de disponibilidad: ' + e.getMessage();
+        }
+
+        // 2. Calcular precio en memoria
+        if (result.isAvailable) {
+            try {
+                VRT_SRV_PricingEngine.calculateTotalCost(new List<VRT_Rental__c>{ tempRental });
+                result.price = tempRental.VRT_DIV_TotalCost__c;
+            } catch (Exception e) {
+                result.errorMessage = 'Error de cálculo de precio: ' + e.getMessage();
+            }
+        }
+
+        return result;
+    }
 }

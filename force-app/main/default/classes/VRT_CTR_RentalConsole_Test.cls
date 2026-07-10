@@ -212,4 +212,78 @@ private class VRT_CTR_RentalConsole_Test {
         System.assertEquals(0, summary.totalCost,
             'totalCost debe ser 0 con Id null.');
     }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // simulateAndValidateRental – Tests
+    // ──────────────────────────────────────────────────────────────────────
+
+    @IsTest
+    static void simulateAndValidateRental_disponible_calculaPrecio() {
+        Account acc = createAccount();
+        insert acc;
+
+        VRT_Vehicle__c vehicle = createVehicle('Coche');
+        insert vehicle;
+
+        // Tarifa Baja-Coche: 100€/día
+        insert createTarifa('Baja', 'Coche', 100);
+
+        Test.startTest();
+        // Enero = temporada Baja. 5 días → 500€
+        VRT_CTR_RentalConsole.SimulationResult result = VRT_CTR_RentalConsole.simulateAndValidateRental(
+            vehicle.Id,
+            acc.Id,
+            Date.newInstance(2028, 1, 10),
+            Date.newInstance(2028, 1, 15)
+        );
+        Test.stopTest();
+
+        System.assertEquals(true, result.isAvailable, 'El vehículo debe estar disponible.');
+        System.assertEquals(500.0, result.price, 'El precio debe ser 500€ (5 días × 100€/día).');
+        System.assertEquals(null, result.errorMessage, 'No debe haber mensaje de error.');
+    }
+
+    @IsTest
+    static void simulateAndValidateRental_conSolapamiento_noDisponible() {
+        Account acc = createAccount();
+        insert acc;
+
+        VRT_Vehicle__c vehicle = createVehicle('Coche');
+        insert vehicle;
+
+        // Tarifa Baja-Coche: 100€/día
+        insert createTarifa('Baja', 'Coche', 100);
+
+        // Crear alquiler existente
+        VRT_Rental__c existing = createRental(vehicle.Id, acc.Id,
+            Date.newInstance(2028, 1, 10), Date.newInstance(2028, 1, 15), 'Reservado');
+        insert existing;
+
+        Test.startTest();
+        // Solapamiento total
+        VRT_CTR_RentalConsole.SimulationResult result = VRT_CTR_RentalConsole.simulateAndValidateRental(
+            vehicle.Id,
+            acc.Id,
+            Date.newInstance(2028, 1, 12),
+            Date.newInstance(2028, 1, 14)
+        );
+        Test.stopTest();
+
+        System.assertEquals(false, result.isAvailable, 'El vehículo no debe estar disponible.');
+        System.assertNotEquals(null, result.errorMessage, 'Debe haber un mensaje de error.');
+        System.assert(result.errorMessage.contains('Conflicto de disponibilidad'),
+            'El mensaje de error debe indicar conflicto de disponibilidad. Recibido: ' + result.errorMessage);
+    }
+
+    @IsTest
+    static void simulateAndValidateRental_datosNull_error() {
+        Test.startTest();
+        VRT_CTR_RentalConsole.SimulationResult result = VRT_CTR_RentalConsole.simulateAndValidateRental(
+            null, null, null, null
+        );
+        Test.stopTest();
+
+        System.assertEquals(true, result.isAvailable, 'Por defecto se asume disponible.');
+        System.assertNotEquals(null, result.errorMessage, 'Debe haber un mensaje de error por campos incompletos.');
+    }
 }
