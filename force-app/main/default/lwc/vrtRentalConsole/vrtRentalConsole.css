@@ -1,0 +1,51 @@
+/* ──────────────────────────────────────────────────────────────────────
+   vrtRentalConsole – Estilos
+   ────────────────────────────────────────────────────────────────────── */
+
+/* Tarjetas KPI */
+.kpi-card {
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    border-radius: 0.5rem;
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    border-left: 4px solid transparent;
+}
+
+.kpi-total {
+    border-left-color: var(--slds-g-color-brand-base-50, #0176d3);
+}
+
+.kpi-active {
+    border-left-color: var(--slds-g-color-success-base-40, #2e844a);
+}
+
+.kpi-completed {
+    border-left-color: var(--slds-g-color-neutral-base-50, #747474);
+}
+
+.kpi-cancelled {
+    border-left-color: var(--slds-g-color-error-base-40, #ea001e);
+}
+
+.kpi-cost {
+    border-left-color: var(--slds-g-color-warning-base-50, #fe9339);
+}
+
+.kpi-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+    line-height: 1.2;
+}
+
+.kpi-value-cost {
+    font-size: 1.125rem;
+}
+
+.kpi-label {
+    font-size: 0.75rem;
+    color: var(--slds-g-color-neutral-base-50, #747474);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.25rem;
+}
