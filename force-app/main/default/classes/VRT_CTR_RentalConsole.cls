@@ -174,19 +174,21 @@ public with sharing class VRT_CTR_RentalConsole {
         );
 
         // 1. Validar disponibilidad
-        try {
-            VRT_SRV_AvailabilityChecker.validateAvailability(new List<VRT_Rental__c>{ tempRental });
-            if (tempRental.hasErrors()) {
-                result.isAvailable = false;
-                List<String> errors = new List<String>();
-                for (Database.Error err : tempRental.getErrors()) {
-                    errors.add(err.getMessage());
-                }
-                result.errorMessage = String.join(errors, '; ');
-            }
-        } catch (Exception e) {
+        List<VRT_Rental__c> conflictingRentals = [
+            SELECT Id, Name, VRT_DAT_InitialDate__c, VRT_DAT_FinalDate__c
+            FROM VRT_Rental__c
+            WHERE VRT_LKP_Vehicle__c = :vehicleId
+            AND VRT_DAT_InitialDate__c < :endDate
+            AND VRT_DAT_FinalDate__c > :startDate
+            LIMIT 1
+        ];
+
+        if (!conflictingRentals.isEmpty()) {
             result.isAvailable = false;
-            result.errorMessage = 'Error de disponibilidad: ' + e.getMessage();
+            VRT_Rental__c conflict = conflictingRentals[0];
+            String formattedStart = conflict.VRT_DAT_InitialDate__c != null ? conflict.VRT_DAT_InitialDate__c.format() : 'sin fecha';
+            String formattedEnd = conflict.VRT_DAT_FinalDate__c != null ? conflict.VRT_DAT_FinalDate__c.format() : 'sin fecha';
+            result.errorMessage = 'Conflicto de disponibilidad con el alquiler existente "' + conflict.Name + '" (' + formattedStart + ' - ' + formattedEnd + ').';
         }
 
         // 2. Calcular precio en memoria
