@@ -50,10 +50,14 @@ Se prohíbe explícitamente realizar consultas a base de datos o DML dentro de e
 
 ---
 
-## 6. Seguridad: Respetar CRUD y FLS
+## 6. Seguridad: Respetar CRUD y FLS (Field-Level Security)
 
-- **USER_MODE**: Las consultas y operaciones ejecutadas desde controladores expuestos a la interfaz de usuario (como `VRT_CTR_FleetSearch` y `VRT_CTR_RentalConsole`) emplean la cláusula `WITH USER_MODE`.
-- **Cumplimiento**: Esto obliga a Salesforce a validar de forma automática los permisos CRUD del objeto y el FLS de los campos del usuario conectado, impidiendo la exposición no autorizada de datos de flota.
+- **System Mode vs. User Mode**: Por defecto, el código Apex se ejecuta en *System Mode* (ignora los permisos CRUD y FLS del perfil del usuario). Aunque se utilice `with sharing` para respetar las reglas de compartición de registros, esto no restringe el acceso a nivel de objeto o campos.
+- **Implementación de `WITH USER_MODE`**: Las consultas SOQL ejecutadas desde los controladores Apex expuestos a los componentes LWC (`VRT_CTR_FleetSearch` y `VRT_CTR_RentalConsole`) emplean explícitamente la cláusula `WITH USER_MODE`.
+- **Validación Automática de CRUD/FLS**: Al añadir `WITH USER_MODE`, el motor de base de datos de Salesforce valida nativamente:
+  1. Si el perfil o Permission Set del usuario tiene permisos de **Lectura** en el objeto custom (CRUD, ej: `VRT_Vehicle__c`).
+  2. Si el usuario tiene acceso de **Lectura** para cada campo individual listado en el `SELECT` (FLS, ej: `VRT_TXT_Brand__c`, `VRT_TXT_Model__c`).
+- **Mitigación de Riesgos**: En caso de que un usuario intente acceder de forma malintencionada o mediante payloads modificados a campos no permitidos, la consulta fallará inmediatamente arrojando un error de sistema (`QueryException`), evitando fugas de información y cumpliendo con las directrices más estrictas de seguridad (como las revisiones PMD y el AppExchange Security Review).
 
 ---
 
