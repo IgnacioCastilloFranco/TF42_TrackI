@@ -1,0 +1,76 @@
+/* Contenedor del Spinner */
+.spinner-container {
+    position: relative;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tarjeta de Vehículo Premium */
+.vehicle-card {
+    border: 1px solid #e1e6eb;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: #1589ee;
+}
+
+/* Fondo del icono personalizado */
+.vehicle-icon-bg {
+    background: linear-gradient(135deg, #1589ee 0%, #005fb2 100%);
+    border-radius: 8px;
+    padding: 6px;
+    box-shadow: 0 2px 4px rgba(21, 137, 238, 0.3);
+}
+
+/* Badges de Disponibilidad */
+.status-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+
+.status-available {
+    background-color: #eaf8f0;
+    color: #2e7d32;
+    border: 1px solid #a3e2bb;
+}
+
+.status-unavailable {
+    background-color: #fdf2f2;
+    color: #c53030;
+    border: 1px solid #f8b4b4;
+}
+
+/* Badges de tipo */
+.type-badge {
+    background-color: #f0f2f5;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+}
+
+/* Estilos de fuente */
+.font-bold {
+    font-weight: 700;
+}
+
+.text-italic {
+    font-style: italic;
+}
+
+.text-muted {
+    color: #718096;
+}

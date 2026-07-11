@@ -30,16 +30,16 @@
 - [/] Añadir LWC a FlexiPage de Account
 
 ## Fase 5: Facturación Automática
-- [ ] Crear objeto `VRT_Factura__c`
-- [ ] Crear objeto `VRT_LogProceso__c`
-- [ ] Crear clase `VRT_SRV_InvoiceGenerator` (Queueable)
-- [ ] Integrar en handler (after update → Completado)
-- [ ] Crear tests `VRT_SRV_InvoiceGenerator_Test`
+- [x] Crear objeto `VRT_Factura__c`
+- [x] Crear objeto `VRT_LogProceso__c`
+- [x] Crear clase `VRT_SRV_InvoiceGenerator` (Queueable)
+- [x] Integrar en handler (after update → Completado)
+- [x] Crear tests `VRT_SRV_InvoiceGenerator_Test`
 
 ## Fase 6: Buscador Global de Flota
-- [ ] Crear controller `VRT_CTR_FleetSearch`
-- [ ] Crear LWC `vrtFleetSearch`
-- [ ] Crear tests `VRT_CTR_FleetSearch_Test`
+- [x] Crear controller `VRT_CTR_FleetSearch`
+- [x] Crear LWC `vrtFleetSearch`
+- [x] Crear tests `VRT_CTR_FleetSearch_Test`
 
 ## Fase 7: Testing y Calidad
 - [ ] Crear `VRT_TestDataFactory`

@@ -1,0 +1,87 @@
+<template>
+    <lightning-card title="Buscador de Flota" icon-name="standard:search">
+        <div class="slds-var-m-around_medium">
+            <!-- Barra de Búsqueda -->
+            <div class="slds-form-element slds-var-m-bottom_medium">
+                <lightning-input
+                    name="enter-search"
+                    label="Matrícula, Marca o Modelo"
+                    type="search"
+                    placeholder="Ej: Ibiza, Seat, I000001..."
+                    value={searchTerm}
+                    onchange={handleSearchChange}
+                    is-loading={isLoading}
+                ></lightning-input>
+            </div>
+
+            <!-- Cargando -->
+            <template if:true={isLoading}>
+                <div class="spinner-container">
+                    <lightning-spinner alternative-text="Buscando..." size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Resultados -->
+            <template if:true={hasResults}>
+                <div class="slds-grid slds-wrap slds-gutters_direct">
+                    <template for:each={vehicles} for:item="vehicle">
+                        <div key={vehicle.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-var-p-around_x-small">
+                            <!-- Tarjeta de Vehículo Premium -->
+                            <div class="vehicle-card slds-box slds-box_link slds-box_x-small slds-media slds-media_center slds-theme_default">
+                                <div class="slds-media__figure">
+                                    <span class="slds-icon_container">
+                                        <lightning-icon 
+                                            icon-name={vehicle.iconName} 
+                                            size="medium"
+                                            variant="slds-icon-inverse"
+                                            class="vehicle-icon-bg"
+                                        ></lightning-icon>
+                                    </span>
+                                </div>
+                                <div class="slds-media__body slds-var-p-left_small">
+                                    <div class="slds-grid slds-grid_align-spread">
+                                        <h3 class="slds-text-heading_small slds-truncate font-bold" title={vehicle.fullName}>
+                                            {vehicle.VRT_TXT_Brand__c} {vehicle.VRT_TXT_Model__c}
+                                        </h3>
+                                        <!-- Tipo de vehículo Badge -->
+                                        <lightning-badge label={vehicle.VRT_SEL_VehicleType__c} class="slds-var-m-left_x-small type-badge"></lightning-badge>
+                                    </div>
+                                    <div class="slds-var-m-top_xx-small">
+                                        <span class="slds-text-body_small">Matrícula: </span>
+                                        <strong class="slds-text-color_weak">{vehicle.VRT_TXT_LicensePlate__c}</strong>
+                                    </div>
+                                    <div class="slds-var-m-top_xx-small slds-grid slds-grid_vertical-align-center">
+                                        <!-- Badge de Disponibilidad -->
+                                        <span class={vehicle.statusClass}>{vehicle.statusText}</span>
+                                        <!-- Estado Físico -->
+                                        <span class="slds-var-m-left_small slds-text-body_small text-italic">{vehicle.VRT_SEL_Condition__c}</span>
+                                    </div>
+                                    <div class="slds-var-m-top_small">
+                                        <lightning-button 
+                                            variant="brand-outline" 
+                                            label="Ver Ficha" 
+                                            icon-name="utility:open" 
+                                            size="small"
+                                            data-id={vehicle.Id}
+                                            onclick={handleNavigateToRecord}
+                                            class="slds-float_right"
+                                        ></lightning-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Mensaje Estado Vacío / Sin búsqueda -->
+            <template if:true={showEmptyState}>
+                <div class="slds-text-align_center slds-var-p-around_large text-muted">
+                    <lightning-icon icon-name="utility:info" size="large" variant="warning" class="slds-var-m-bottom_small"></lightning-icon>
+                    <p class="slds-text-heading_small">{emptyStateTitle}</p>
+                    <p class="slds-text-body_medium slds-var-m-top_xx-small">{emptyStateSubtitle}</p>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

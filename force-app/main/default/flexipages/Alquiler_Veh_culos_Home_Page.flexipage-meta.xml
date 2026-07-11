@@ -3,6 +3,12 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentName>vrtFleetSearch</componentName>
+                <identifier>c_vrtFleetSearch</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>dashboardName</name>
                     <value>SwpTSzvivJatvnatULAtHNrAGZYVSQ1</value>
