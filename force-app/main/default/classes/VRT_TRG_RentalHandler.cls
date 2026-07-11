@@ -89,5 +89,20 @@ public class VRT_TRG_RentalHandler {
 
         // Enviar a aprobación financiera si el coste ha cambiado y supera el umbral
         VRT_SRV_ApprovalManager.submitForApprovalOnUpdate(oldMap, newMap);
+
+        // Capturar alquileres completados para facturación automática asíncrona
+        List<Id> completedRentalIds = new List<Id>();
+        for (Id rentalId : newMap.keySet()) {
+            VRT_Rental__c oldRental = oldMap.get(rentalId);
+            VRT_Rental__c newRental = newMap.get(rentalId);
+
+            if (oldRental.VRT_SEL_Status__c != 'Completado' && newRental.VRT_SEL_Status__c == 'Completado') {
+                completedRentalIds.add(newRental.Id);
+            }
+        }
+
+        if (!completedRentalIds.isEmpty()) {
+            System.enqueueJob(new VRT_SRV_InvoiceGenerator(completedRentalIds));
+        }
     }
 }

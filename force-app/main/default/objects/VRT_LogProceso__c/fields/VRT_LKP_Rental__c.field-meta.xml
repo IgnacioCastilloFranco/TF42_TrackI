@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VRT_LKP_Rental__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Alquiler asociado con este log.</description>
+    <label>Alquiler</label>
+    <referenceTo>VRT_Rental__c</referenceTo>
+    <relationshipLabel>Logs de Proceso</relationshipLabel>
+    <relationshipName>Logs_de_Proceso</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

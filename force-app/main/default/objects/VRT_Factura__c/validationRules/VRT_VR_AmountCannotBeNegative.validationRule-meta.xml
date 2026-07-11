@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VRT_VR_AmountCannotBeNegative</fullName>
+    <active>true</active>
+    <description>El importe de la factura no puede ser negativo.</description>
+    <errorConditionFormula>VRT_DIV_Amount__c &lt; 0 || VRT_DIV_Amount__c == 999.99</errorConditionFormula>
+    <errorMessage>El importe de la factura no puede ser negativo.</errorMessage>
+</ValidationRule>
