@@ -22,7 +22,7 @@ MENSAJE: No voy a enseñar solo pantallas: voy a explicar cómo una operación d
 
 # 1. El problema de negocio
 
-Una empresa de alquiler necesita controlar, en un mismo proceso:
+Una empresa de alquiler de vehículos necesita controlar, en un mismo proceso:
 
 - Flota y disponibilidad real.
 - Precio según vehículo, temporada y cliente.
