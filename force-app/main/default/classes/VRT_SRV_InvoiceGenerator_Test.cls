@@ -97,6 +97,14 @@ private class VRT_SRV_InvoiceGenerator_Test {
         System.assertEquals(500.00, invoices[0].VRT_DIV_Amount__c, 
             'El importe de la factura debe coincidir con el coste total del alquiler (500€).');
 
+        List<ContentVersion> pdfFiles = [
+            SELECT Id, Title, FileExtension, FirstPublishLocationId
+            FROM ContentVersion
+            WHERE FirstPublishLocationId = :invoices[0].Id
+        ];
+        System.assertEquals(1, pdfFiles.size(), 'Debe haberse creado un PDF relacionado con la factura.');
+        System.assertEquals('pdf', pdfFiles[0].FileExtension, 'El archivo relacionado debe ser PDF.');
+
         List<VRT_LogProceso__c> logs = [
             SELECT Id, VRT_SEL_Status__c, VRT_TXT_Message__c 
             FROM VRT_LogProceso__c 

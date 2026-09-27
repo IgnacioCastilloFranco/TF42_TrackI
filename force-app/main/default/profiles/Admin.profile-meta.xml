@@ -134,11 +134,29 @@
         <field>VRT_Vehicle__c.VRT_TXT_Model__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VRT_Factura__c.VRT_LKP_Rental__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VRT_Factura__c.VRT_DIV_Amount__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VRT_Factura__c.VRT_DAT_InvoiceDate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <layoutAssignments>
         <layout>Account-VehicleRental Account Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
         <layout>VRT_Rental__c-VehicleRental Alquiler Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>VRT_Factura__c-VehicleRental Factura Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
         <layout>VRT_Vehicle__c-VehicleRental Vehículo Layout</layout>

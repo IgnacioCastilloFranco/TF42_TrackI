@@ -10,7 +10,7 @@
  *
  * @history     10/07/2026 - ICASTILLOF - Creación de la clase
  */
-public class VRT_SRV_InvoiceGenerator implements Queueable {
+public class VRT_SRV_InvoiceGenerator implements Queueable, Database.AllowsCallouts {
 
     private List<Id> rentalIds;
 
@@ -89,6 +89,14 @@ public class VRT_SRV_InvoiceGenerator implements Queueable {
                     
                     // Preparar log de éxito
                     String msg = 'Factura generada con éxito (' + sr.getId() + ').';
+                    String processStatus = 'Éxito';
+                    try {
+                        ContentVersion pdfFile = generateInvoicePdf(invoicesToInsert[i].Id);
+                        msg += ' PDF generado y relacionado (' + pdfFile.Id + ').';
+                    } catch (Exception e) {
+                        processStatus = 'Error';
+                        msg += ' No se pudo generar el PDF: ' + e.getMessage();
+                    }
                     String emailAddr = rental.VRT_LKP_Account__r.VRT_TXT_Email__c;
                     
                     if (String.isNotBlank(emailAddr)) {
@@ -110,7 +118,7 @@ public class VRT_SRV_InvoiceGenerator implements Queueable {
 
                     logsToInsert.add(new VRT_LogProceso__c(
                         VRT_TXT_ProcessName__c = 'Facturación Automática',
-                        VRT_SEL_Status__c       = 'Éxito',
+                        VRT_SEL_Status__c       = processStatus,
                         VRT_LKP_Rental__c       = rental.Id,
                         VRT_TXT_Message__c      = msg
                     ));
@@ -149,5 +157,30 @@ public class VRT_SRV_InvoiceGenerator implements Queueable {
         if (!logsToInsert.isEmpty()) {
             Database.insert(logsToInsert, false);
         }
+    }
+
+    private static ContentVersion generateInvoicePdf(Id invoiceId) {
+        PageReference invoicePage = Page.VRT_InvoicePdf;
+        invoicePage.getParameters().put('id', invoiceId);
+
+        Blob pdfBody = Test.isRunningTest()
+            ? Blob.valueOf('Test invoice PDF')
+            : invoicePage.getContentAsPDF();
+
+        VRT_Factura__c invoice = [
+            SELECT Name
+            FROM VRT_Factura__c
+            WHERE Id = :invoiceId
+            LIMIT 1
+        ];
+
+        ContentVersion pdfFile = new ContentVersion(
+            Title = 'Factura ' + invoice.Name,
+            PathOnClient = 'Factura-' + invoice.Name + '.pdf',
+            VersionData = pdfBody,
+            FirstPublishLocationId = invoiceId
+        );
+        insert pdfFile;
+        return pdfFile;
     }
 }

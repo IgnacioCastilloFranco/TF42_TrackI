@@ -1,0 +1,72 @@
+<apex:page standardController="VRT_Factura__c" renderAs="pdf" showHeader="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false">
+    <html>
+        <head>
+            <style>
+                @page {
+                    size: A4;
+                    margin: 2cm;
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    color: #1f2937;
+                    font-size: 12pt;
+                }
+                h1 {
+                    color: #1d4ed8;
+                    margin-bottom: 24px;
+                }
+                .header {
+                    border-bottom: 2px solid #1d4ed8;
+                    margin-bottom: 24px;
+                    padding-bottom: 12px;
+                }
+                .label {
+                    color: #64748b;
+                    font-size: 10pt;
+                }
+                .value {
+                    font-size: 14pt;
+                    font-weight: bold;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                td {
+                    border-bottom: 1px solid #cbd5e1;
+                    padding: 12px 8px;
+                }
+                .amount {
+                    color: #1d4ed8;
+                    font-size: 18pt;
+                    font-weight: bold;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>Factura de alquiler de vehículo</h1>
+                <div class="label">Número de factura</div>
+                <div class="value"><apex:outputField value="{!VRT_Factura__c.Name}"/></div>
+            </div>
+            <table>
+                <tr>
+                    <td class="label">Alquiler</td>
+                    <td><apex:outputField value="{!VRT_Factura__c.VRT_LKP_Rental__c}"/></td>
+                </tr>
+                <tr>
+                    <td class="label">Cuenta</td>
+                    <td><apex:outputField value="{!VRT_Factura__c.VRT_LKP_Rental__r.VRT_LKP_Account__c}"/></td>
+                </tr>
+                <tr>
+                    <td class="label">Fecha de factura</td>
+                    <td><apex:outputField value="{!VRT_Factura__c.VRT_DAT_InvoiceDate__c}"/></td>
+                </tr>
+                <tr>
+                    <td class="label">Importe total</td>
+                    <td class="amount"><apex:outputField value="{!VRT_Factura__c.VRT_DIV_Amount__c}"/></td>
+                </tr>
+            </table>
+        </body>
+    </html>
+</apex:page>

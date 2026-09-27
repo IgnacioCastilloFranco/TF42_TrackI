@@ -48,6 +48,21 @@
         <field>VRT_Rental__c.VRT_FOR_Duration__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>VRT_Factura__c.VRT_LKP_Rental__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>VRT_Factura__c.VRT_DIV_Amount__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>VRT_Factura__c.VRT_DAT_InvoiceDate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <label>Airport Counter Access</label>
     <objectPermissions>
         <allowCreate>true</allowCreate>
