@@ -186,7 +186,7 @@ private class VRT_SRV_PricingEngine_Test {
     // ──────────────────────────────────────────────────────────────────────
 
     @IsTest
-    static void calculateTotalCost_sinTarifa_costeCero() {
+    static void calculateTotalCost_sinTarifa_bloqueaAlquiler() {
         // Arrange: No insertamos tarifa para la combinación
         Account acc = new Account(Name = 'Test Account');
         insert acc;
@@ -202,13 +202,16 @@ private class VRT_SRV_PricingEngine_Test {
 
         // Act: insert dispara trigger → before insert → calculateTotalCost
         Test.startTest();
-        insert rental;
+        Database.SaveResult saveResult = Database.insert(rental, false);
         Test.stopTest();
 
-        // Assert: Sin tarifa → precio/día = 0 → coste = 0
-        VRT_Rental__c result = [SELECT VRT_DIV_TotalCost__c FROM VRT_Rental__c WHERE Id = :rental.Id];
-        System.assertEquals(0.00, result.VRT_DIV_TotalCost__c,
-            'Sin tarifa, el coste debe ser 0');
+        // Assert: sin tarifa, el alquiler no debe persistirse con coste cero
+        System.assertEquals(false, saveResult.isSuccess(),
+            'Sin tarifa, el alquiler debe ser rechazado');
+        System.assert(
+            saveResult.getErrors()[0].getMessage().contains('No existe una tarifa activa'),
+            'El error debe indicar que falta la tarifa activa'
+        );
     }
 
     // ──────────────────────────────────────────────────────────────────────

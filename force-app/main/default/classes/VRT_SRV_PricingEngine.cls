@@ -8,6 +8,8 @@
  */
 public with sharing class VRT_SRV_PricingEngine {
 
+    public class MissingTarifaException extends Exception {}
+
     // ──────────────────────────────────────────────────────────────────────
     // Constantes
     // ──────────────────────────────────────────────────────────────────────
@@ -81,11 +83,18 @@ public with sharing class VRT_SRV_PricingEngine {
 
             // Buscar tarifa por clave compuesta (temporada + tipo vehículo, en minúsculas)
             String tarifaKey = (season + '|' + vehicleType).toLowerCase();
-            Decimal pricePerDay = 0;
-
-            if (tarifaMap.containsKey(tarifaKey)) {
-                pricePerDay = tarifaMap.get(tarifaKey).VRT_DIV_PricePerDay__c;
+            if (!tarifaMap.containsKey(tarifaKey)) {
+                String errorMessage = 'No existe una tarifa activa para la temporada '
+                    + season + ' y el tipo de vehículo ' + vehicleType + '.';
+                if (Trigger.isExecuting) {
+                    rental.addError(errorMessage);
+                    continue;
+                } else {
+                    throw new MissingTarifaException(errorMessage);
+                }
             }
+
+            Decimal pricePerDay = tarifaMap.get(tarifaKey).VRT_DIV_PricePerDay__c;
 
             // Calcular coste base = precio/día × duración (días)
             Decimal duration = rental.VRT_FOR_Duration__c != null ? rental.VRT_FOR_Duration__c : 0;
@@ -165,7 +174,7 @@ public with sharing class VRT_SRV_PricingEngine {
         // Fecha límite: 12 meses atrás desde hoy
         Date twelveMonthsAgo = Date.today().addMonths(-12);
 
-        // Contar alquileres completados por cuenta en los últimos 12 meses
+        // Contar alquileres completados por esta cuenta en los últimos 12 meses
         List<AggregateResult> results = [ //AggregateResult es un tipo especial de SObject de Salesforce que devuelve los resultados de queries SOQL con funciones de agregación (COUNT, SUM, AVG, MIN, MAX) y/o GROUP BY 
             SELECT VRT_LKP_Account__c accountId, COUNT(Id) rentalCount // accountId y rentalCount son alias
             FROM VRT_Rental__c
