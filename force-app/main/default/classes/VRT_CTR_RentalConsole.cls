@@ -178,6 +178,7 @@ public with sharing class VRT_CTR_RentalConsole {
             SELECT Id, Name, VRT_DAT_InitialDate__c, VRT_DAT_FinalDate__c
             FROM VRT_Rental__c
             WHERE VRT_LKP_Vehicle__c = :vehicleId
+            AND VRT_SEL_Status__c != 'Cancelado'
             AND VRT_DAT_InitialDate__c < :endDate
             AND VRT_DAT_FinalDate__c > :startDate
             LIMIT 1
