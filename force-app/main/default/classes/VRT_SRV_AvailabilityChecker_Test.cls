@@ -10,6 +10,33 @@ private class VRT_SRV_AvailabilityChecker_Test {
 
     private static Integer vehicleCounter = 0;
 
+    @TestSetup
+    static void createPricingData() {
+        insert new List<VRT_Tarifa__c>{
+            new VRT_Tarifa__c(
+                Name = 'Test Alta Coche',
+                VRT_SEL_Season__c = 'Alta',
+                VRT_SEL_VehicleType__c = 'coche',
+                VRT_DIV_PricePerDay__c = 100,
+                VRT_FLG_Active__c = true
+            ),
+            new VRT_Tarifa__c(
+                Name = 'Test Media Coche',
+                VRT_SEL_Season__c = 'Media',
+                VRT_SEL_VehicleType__c = 'coche',
+                VRT_DIV_PricePerDay__c = 100,
+                VRT_FLG_Active__c = true
+            ),
+            new VRT_Tarifa__c(
+                Name = 'Test Baja Coche',
+                VRT_SEL_Season__c = 'Baja',
+                VRT_SEL_VehicleType__c = 'coche',
+                VRT_DIV_PricePerDay__c = 100,
+                VRT_FLG_Active__c = true
+            )
+        };
+    }
+
     private static Account createAccount() {
         return new Account(Name = 'Availability Test Account');
     }
@@ -109,6 +136,43 @@ private class VRT_SRV_AvailabilityChecker_Test {
             );
         }
         Test.stopTest();
+    }
+
+    @IsTest
+    static void validateAvailability_alquilerCancelado_noBloquea() {
+        Account acc = createAccount();
+        insert acc;
+
+        VRT_Vehicle__c vehicle = createVehicle('Coche');
+        insert vehicle;
+
+        VRT_Rental__c canceledRental = createRental(
+            vehicle.Id,
+            acc.Id,
+            Date.newInstance(2027, 2, 10),
+            Date.newInstance(2027, 2, 15)
+        );
+        insert canceledRental;
+
+        canceledRental.VRT_SEL_Status__c = 'Cancelado';
+        update canceledRental;
+
+        VRT_Rental__c replacementRental = createRental(
+            vehicle.Id,
+            acc.Id,
+            Date.newInstance(2027, 2, 12),
+            Date.newInstance(2027, 2, 14)
+        );
+
+        Test.startTest();
+        insert replacementRental;
+        Test.stopTest();
+
+        System.assertNotEquals(
+            null,
+            replacementRental.Id,
+            'Un alquiler cancelado no debe bloquear el mismo vehículo y fechas.'
+        );
     }
 
     @IsTest

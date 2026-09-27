@@ -77,6 +77,7 @@ public with sharing class VRT_SRV_AvailabilityChecker {
             FROM VRT_Rental__c
             WHERE VRT_LKP_Vehicle__c IN :vehicleIds
             AND Id NOT IN :incomingIds
+            AND VRT_SEL_Status__c != 'Cancelado'
             AND VRT_DAT_InitialDate__c <= :globalMaxEnd
             AND VRT_DAT_FinalDate__c >= :globalMinStart
         ];
