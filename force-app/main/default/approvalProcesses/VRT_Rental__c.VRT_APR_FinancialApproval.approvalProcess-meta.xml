@@ -20,7 +20,7 @@
         <allowDelegate>false</allowDelegate>
         <assignedApprover>
             <approver>
-                <name>Aprobaciones_Financieras</name>
+                <name>Aprobaciones_Responsable_Financiero</name>
                 <type>queue</type>
             </approver>
         </assignedApprover>
