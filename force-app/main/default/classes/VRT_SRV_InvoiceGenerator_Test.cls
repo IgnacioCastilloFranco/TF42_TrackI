@@ -118,6 +118,8 @@ private class VRT_SRV_InvoiceGenerator_Test {
             'El mensaje del log debe indicar éxito.');
         System.assert(logs[0].VRT_TXT_Message__c.contains('cliente@test.com'), 
             'El mensaje del log debe mencionar la dirección de correo notificada.');
+        System.assert(logs[0].VRT_TXT_Message__c.contains('PDF adjunto al correo.'),
+            'El mensaje debe confirmar que el PDF se adjuntó al correo.');
     }
 
     @IsTest

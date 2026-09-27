@@ -90,8 +90,11 @@ public class VRT_SRV_InvoiceGenerator implements Queueable, Database.AllowsCallo
                     // Preparar log de éxito
                     String msg = 'Factura generada con éxito (' + sr.getId() + ').';
                     String processStatus = 'Éxito';
+                    Blob invoicePdf;
+                    ContentVersion pdfFile;
                     try {
-                        ContentVersion pdfFile = generateInvoicePdf(invoicesToInsert[i].Id);
+                        pdfFile = generateInvoicePdf(invoicesToInsert[i].Id);
+                        invoicePdf = pdfFile.VersionData;
                         msg += ' PDF generado y relacionado (' + pdfFile.Id + ').';
                     } catch (Exception e) {
                         processStatus = 'Error';
@@ -110,6 +113,14 @@ public class VRT_SRV_InvoiceGenerator implements Queueable, Database.AllowsCallo
                             rental.VRT_DIV_TotalCost__c + ' €.\n\n' +
                             'Gracias por confiar en nosotros.'
                         );
+                        if (invoicePdf != null) {
+                            Messaging.EmailFileAttachment attachment = new Messaging.EmailFileAttachment();
+                            attachment.setFileName(pdfFile.PathOnClient);
+                            attachment.setBody(invoicePdf);
+                            attachment.setContentType('application/pdf');
+                            mail.setFileAttachments(new Messaging.EmailFileAttachment[] { attachment });
+                            msg += ' PDF adjunto al correo.';
+                        }
                         emailsToSend.add(mail);
                         msg += ' Correo de notificación encolado para: ' + emailAddr;
                     } else {
