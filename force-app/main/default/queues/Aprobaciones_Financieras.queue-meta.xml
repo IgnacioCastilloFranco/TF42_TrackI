@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Queue xmlns="http://soap.sforce.com/2006/04/metadata">
+    <doesSendEmailToMembers>false</doesSendEmailToMembers>
+    <name>Aprobaciones Financieras</name>
+    <queueMembers>
+        <users>igcastil.eea2e76e2da5@agentforce.com</users>
+    </queueMembers>
+    <queueSobject>
+        <sobjectType>VRT_Rental__c</sobjectType>
+    </queueSobject>
+</Queue>

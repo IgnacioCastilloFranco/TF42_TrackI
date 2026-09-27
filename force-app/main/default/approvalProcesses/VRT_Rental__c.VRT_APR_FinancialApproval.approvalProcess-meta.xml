@@ -9,8 +9,8 @@
         <allowDelegate>false</allowDelegate>
         <assignedApprover>
             <approver>
-                <name>Manager</name>
-                <type>userHierarchyField</type>
+                <name>Aprobaciones_Financieras</name>
+                <type>queue</type>
             </approver>
         </assignedApprover>
         <label>Aprobacion Gerente</label>
@@ -20,8 +20,8 @@
         <allowDelegate>false</allowDelegate>
         <assignedApprover>
             <approver>
-                <name>Manager</name>
-                <type>userHierarchyField</type>
+                <name>Aprobaciones_Financieras</name>
+                <type>queue</type>
             </approver>
         </assignedApprover>
         <entryCriteria>
@@ -53,9 +53,6 @@
     </finalRejectionActions>
     <finalRejectionRecordLock>false</finalRejectionRecordLock>
     <label>Aprobacion Financiera Alquiler</label>
-    <nextAutomatedApprover>
-        <userHierarchyField>Manager</userHierarchyField>
-    </nextAutomatedApprover>
     <recordEditability>AdminOnly</recordEditability>
     <showApprovalHistory>true</showApprovalHistory>
 </ApprovalProcess>
