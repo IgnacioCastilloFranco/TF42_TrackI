@@ -16,8 +16,8 @@
     <formFactors>Small</formFactors>
     <formFactors>Large</formFactors>
     <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
-    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
-    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isNavPersonalizationDisabled>true</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>true</isNavTabPersistenceDisabled>
     <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
     <label>AlquilaVehículo S.L</label>
     <navType>Standard</navType>
@@ -25,7 +25,9 @@
     <tabs>standard-Account</tabs>
     <tabs>standard-Contact</tabs>
     <tabs>VRT_Rental__c</tabs>
+    <tabs>VRT_Tarifa__c</tabs>
     <tabs>VRT_Vehicle__c</tabs>
+    <tabs>VRT_Factura__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>AlquilaVeh_culo_S_L_UtilityBar</utilityBar>
 </CustomApplication>
