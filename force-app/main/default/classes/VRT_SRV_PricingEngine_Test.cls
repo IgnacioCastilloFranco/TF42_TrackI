@@ -249,7 +249,8 @@ private class VRT_SRV_PricingEngine_Test {
         insert vehicle;
 
         VRT_Tarifa__c tarifa = createTarifa('Alta', 'coche', 100.00);
-        insert tarifa;
+        VRT_Tarifa__c tarifaHistorica = createTarifa('Media', 'coche', 100.00);
+        insert new List<VRT_Tarifa__c>{ tarifa, tarifaHistorica };
 
         // Crear 3 alquileres completados históricos para la cuenta (últimos 12 meses)
         List<VRT_Rental__c> historicRentals = new List<VRT_Rental__c>();
@@ -293,7 +294,8 @@ private class VRT_SRV_PricingEngine_Test {
         insert vehicle;
 
         VRT_Tarifa__c tarifa = createTarifa('Media', 'moto', 50.00);
-        insert tarifa;
+        VRT_Tarifa__c tarifaHistorica = createTarifa('Alta', 'moto', 50.00);
+        insert new List<VRT_Tarifa__c>{ tarifa, tarifaHistorica };
 
         // Solo 2 alquileres completados (por debajo del umbral de 3)
         List<VRT_Rental__c> historicRentals = new List<VRT_Rental__c>();
@@ -408,6 +410,8 @@ private class VRT_SRV_PricingEngine_Test {
         VRT_Vehicle__c vehicle = createVehicle('Coche');
         insert vehicle;
 
+        insert createTarifa('Media', 'coche', 100.00);
+
         // Crear 4 alquileres completados en los últimos 12 meses
         List<VRT_Rental__c> rentals = new List<VRT_Rental__c>();
         for (Integer i = 0; i < 4; i++) {
@@ -438,6 +442,8 @@ private class VRT_SRV_PricingEngine_Test {
 
         VRT_Vehicle__c vehicle = createVehicle('Coche');
         insert vehicle;
+
+        insert createTarifa('Alta', 'coche', 100.00);
 
         // Solo 1 alquiler completado
         Date hStart = Date.today().addMonths(-3);
@@ -527,7 +533,8 @@ private class VRT_SRV_PricingEngine_Test {
         insert vehicle;
 
         VRT_Tarifa__c tarifa = createTarifa('Media', 'moto', 30.00);
-        insert tarifa;
+        VRT_Tarifa__c tarifaHistorica = createTarifa('Alta', 'moto', 30.00);
+        insert new List<VRT_Tarifa__c>{ tarifa, tarifaHistorica };
 
         // Abril futuro = temporada Media, 7 días
         Date startDate = Date.newInstance(2027, 4, 1);
@@ -551,7 +558,7 @@ private class VRT_SRV_PricingEngine_Test {
     // ──────────────────────────────────────────────────────────────────────
 
     @IsTest
-    static void calculateTotalCost_sinVehiculo_costeCero() {
+    static void calculateTotalCost_sinVehiculo_bloqueaAlquiler() {
         Account acc = new Account(Name = 'No Vehicle Account');
         insert acc;
 
@@ -567,15 +574,27 @@ private class VRT_SRV_PricingEngine_Test {
             VRT_SEL_PaymentStatus__c = 'Pagado'
         );
 
-        // Act: insert dispara trigger → before insert → calculateTotalCost
+        // Act: la ausencia de vehículo impide resolver una tarifa y bloquea el DML.
         Test.startTest();
-        insert rental;
+        Database.SaveResult result;
+        try {
+            result = Database.insert(rental, false);
+        } catch (DmlException ex) {
+            System.assert(
+                ex.getMessage().contains('No existe una tarifa activa'),
+                'El error debe indicar que falta una tarifa aplicable'
+            );
+        }
         Test.stopTest();
 
-        // Sin vehículo → no se puede resolver tipo → no hay tarifa → coste 0
-        VRT_Rental__c result = [SELECT VRT_DIV_TotalCost__c FROM VRT_Rental__c WHERE Id = :rental.Id];
-        System.assertEquals(0.00, result.VRT_DIV_TotalCost__c,
-            'Sin vehículo asignado, el coste debe ser 0');
+        if (result != null) {
+            System.assertEquals(false, result.isSuccess(),
+                'Un alquiler sin vehículo no debe poder guardarse');
+            System.assert(
+                result.getErrors()[0].getMessage().contains('No existe una tarifa activa'),
+                'El error debe indicar que falta una tarifa aplicable'
+            );
+        }
     }
 
     // ──────────────────────────────────────────────────────────────────────
@@ -597,8 +616,8 @@ private class VRT_SRV_PricingEngine_Test {
         // Agosto = temporada Alta, 3 días
         VRT_Rental__c rental = createRental(
             vehicle.Id, acc.Id,
-            Date.newInstance(2026, 8, 1),
-            Date.newInstance(2026, 8, 4)
+            Date.newInstance(2027, 8, 1),
+            Date.newInstance(2027, 8, 4)
         );
 
         // Act: el insert dispara el trigger → before insert → calculateTotalCost

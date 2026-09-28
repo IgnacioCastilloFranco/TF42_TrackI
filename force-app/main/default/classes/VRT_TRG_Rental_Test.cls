@@ -54,6 +54,13 @@ public class VRT_TRG_Rental_Test {
 			testVehics.add(veh);
         }
         insert testVehics; 
+
+        insert new VRT_Tarifa__c(
+            VRT_SEL_Season__c      = 'Media',
+            VRT_SEL_VehicleType__c = 'Coche',
+            VRT_DIV_PricePerDay__c = 50,
+            VRT_FLG_Active__c      = true
+        );
 	}
     
 	@isTest static void testUpdateConditionVehicleRecienFabricado() {
